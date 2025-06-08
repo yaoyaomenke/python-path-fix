@@ -74,7 +74,9 @@ fix_py:
 get_python_path:
   lea rcx, [python_in_where]
   call system
-  call scanf
+
+  lea rcx, [wait_cmd]
+  call system
   jmp exit_break
 main:
   sub rsp, 40
@@ -111,6 +113,7 @@ printf_input_python_path db "请输入python路径>",0
 input_text db "%d",0
 input_path_text db "%255s",0
 closing_quote db ';%~b"',0
+wait_cmd db "pause",0
 get_user_path db "for /f ",22h,"tokens=2*",22h," %a in ('reg query HKCU\Environment /v PATH') do setx PATH ",22h,0
 closing_quote1 db ' "%1"', 0
 fix_py_cmd db 'assoc .py=Python.File & ftype Python.File=',0
