@@ -8,6 +8,7 @@ extern strcat
 extern printf
 extern system
 extern MessageBoxA
+extern getchar
 
 fix_python:
   lea rcx, [printf_input_python_path]
@@ -70,9 +71,13 @@ fix_py:
   call MessageBoxA
 
   jmp exit_break
-
+get_python_path:
+  lea rcx, [python_in_where]
+  call system
+  call scanf
+  jmp exit_break
 main:
-  sub rsp, 36
+  sub rsp, 40
   mov dword [rsp+32], 0
 
   lea rcx, [printf_fun_list]
@@ -92,21 +97,25 @@ main:
   cmp dword [rsp+32], 2
   je fix_py
 
+  cmp dword [rsp+32], 3
+   je get_python_path
+
 exit_break:
   mov rcx, 0
   call exit
 
 section .data
-printf_what_fun db "ƒ„“™ π”√ ≤√¥π¶ƒ‹?>",0
-printf_fun_list db "1.–ﬁ∏¥pythonª∑æ≥±‰¡ø      2.–ﬁ∏¥pyŒƒº˛¥Úø™∑Ω Ω",0x0A,0
-printf_input_python_path db "«Î ‰»Îpython¬∑æ∂>",0
+printf_what_fun db "‰Ω†Ë¶Å‰ΩøÁî®‰ªÄ‰πàÂäüËÉΩ?>",0
+printf_fun_list db "1.‰øÆÂ§çpythonÁéØÂ¢ÉÂèòÈáè      2.‰øÆÂ§çpyÊñá‰ª∂ÊâìÂºÄÊñπÂºè      3.ÊâæÂ∑≤ÂÆâË£ÖÁöÑpythonË∑ØÂæÑ",0x0A,0
+printf_input_python_path db "ËØ∑ËæìÂÖ•pythonË∑ØÂæÑ>",0
 input_text db "%d",0
 input_path_text db "%255s",0
 closing_quote db ';%~b"',0
 get_user_path db "for /f ",22h,"tokens=2*",22h," %a in ('reg query HKCU\Environment /v PATH') do setx PATH ",22h,0
 closing_quote1 db ' "%1"', 0
 fix_py_cmd db 'assoc .py=Python.File & ftype Python.File=',0
-fix_ok db "–ﬁ∏¥≥…π¶",0
+fix_ok db "‰øÆÂ§çÊàêÂäü",0
+python_in_where db "where python",0
 section .bss
 path_buffer resb 258
 fix_cmd resb 510
